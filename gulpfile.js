@@ -7,9 +7,9 @@ gulp.task("copy-html", function(){
 })
 
 gulp.task("images", function(){
-    return gulp.src("images/**/*")
+    return gulp.src("images/*.{jpg,png}")
     .pipe(gulp.dest("dist/images"))
-    .prependListener(connect.reload());
+    .pipe(connect.reload());
 })
 
 gulp.task("data", function(){
@@ -18,40 +18,39 @@ gulp.task("data", function(){
     .pipe(connect.reload());
 })
 
-gulp.task("bulid", ["copy-html", "images", "data"], function(){
-    console.log("编译成功");
-})
+
 
 const scss = require("gulp-sass");
 const minifyCSS = require("gulp-minify-css");
 const rename = require("gulp-rename");
 
-gulp.taka("scss", function(){
+gulp.task("scss",function(){
     return gulp.src("scss/index.scss")
     .pipe(scss())
     .pipe(gulp.dest("dist/css"))
     .pipe(minifyCSS())
     .pipe(rename("index.min.css"))
     .pipe(gulp.dest("dist/css"))
+    .pipe(connect.reload());
 })
+
 
 const concat = require("gulp-concat");
 const uglify = require("gulp-uglify");
 
 gulp.task("scripts", function(){
     return gulp.src(["js/*.js"])
-    .pipe(concat("index.js"))
-    .pipe(gulp.dest("dist.js"))
-    .pipe(uglify())
-    .pipe(rename("index.min.js"))
     .pipe(gulp.dest("dist/js"))
     .pipe(connect.reload());
 })
+
 
 gulp.task("bulid", ["copy-html", "images", "data", 'scss', 'scripts'], function(){
     console.log("项目建立成功");
     
 })
+
+
 
 gulp.task("watch", function(){
     gulp.watch("index.html", ["copy-html"]);
